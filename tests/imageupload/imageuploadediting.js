@@ -199,23 +199,6 @@ describe( 'ImageUploadEditing', () => {
 		expect( getModelData( model ) ).to.equal( '<paragraph>foo[]</paragraph>' );
 	} );
 
-	it( 'should not insert image when there is non-empty HTML content pasted', () => {
-		const fileMock = createNativeFileMock();
-		const dataTransfer = new DataTransfer( {
-			files: [ fileMock ],
-			types: [ 'Files', 'text/html' ],
-			getData: type => type === 'text/html' ? '<p>SomeData</p>' : ''
-		} );
-		setModelData( model, '<paragraph>[]foo</paragraph>' );
-
-		const targetRange = Range.createFromParentsAndOffsets( doc.getRoot(), 1, doc.getRoot(), 1 );
-		const targetViewRange = editor.editing.mapper.toViewRange( targetRange );
-
-		viewDocument.fire( 'clipboardInput', { dataTransfer, targetRanges: [ targetViewRange ] } );
-
-		expect( getModelData( model ) ).to.equal( '<paragraph>[]foo</paragraph>' );
-	} );
-
 	it( 'should not insert image nor crash when pasted image could not be inserted', () => {
 		model.schema.register( 'other', {
 			allowIn: '$root',
