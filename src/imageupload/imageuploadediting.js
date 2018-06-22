@@ -47,9 +47,9 @@ export default class ImageUploadEditing extends Plugin {
 
 		// Execute imageUpload command when image is dropped or pasted.
 		this.listenTo( editor.editing.view.document, 'clipboardInput', ( evt, data ) => {
-			// Skip if non empty HTML data is included.
+			// Skip if no files to upload
 			// https://github.com/ckeditor/ckeditor5-upload/issues/68
-			if ( isHtmlIncluded( data.dataTransfer ) ) {
+			if ( !data.dataTransfer.files || !data.dataTransfer.files.length ) {
 				return;
 			}
 
@@ -230,12 +230,4 @@ export default class ImageUploadEditing extends Plugin {
 			fileRepository.destroyLoader( loader );
 		}
 	}
-}
-
-// Returns `true` if non-empty `text/html` is included in the data transfer.
-//
-// @param {module:clipboard/datatransfer~DataTransfer} dataTransfer
-// @returns {Boolean}
-export function isHtmlIncluded( dataTransfer ) {
-	return Array.from( dataTransfer.types ).includes( 'text/html' ) && dataTransfer.getData( 'text/html' ) !== '';
 }
